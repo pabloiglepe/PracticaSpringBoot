@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<footer th:fragment="footer">
+
+    <button class="boton" th:onclick="|window.location.href='@{/}'|">volver</button>
+
+    <p>&copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> Sistema de Nóminas. Todos los derechos reservados.</p>
+</footer>
+</html>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmpleadoService {
@@ -30,12 +31,12 @@ public class EmpleadoService {
     }
 
 
-    public Double mostrarSalarioPorDni(String dni) {
+    public Optional<Empleado> mostrarSalarioPorDni(String dni) {
         return empleadoRepository.findSalarioByID(dni);
     }
 
 
-    public List<Empleado> buscarEmpleadosParaModificar(String dni, String nombre, Integer categoria, Character sexo, Integer anyos) throws RepositoryException {
+    public List<Empleado> buscarEmpleadosParaModificar(String dni, String nombre, Integer categoria, Character sexo, Integer anyos) {
         return empleadoRepository.findByCriteriosBusqueda(dni, nombre, categoria, sexo, anyos);
     }
 }

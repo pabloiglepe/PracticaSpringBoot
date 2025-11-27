@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-tags}">
+    <meta charset="UTF-8">
+    <title>Menú Principal</title>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<h2>MENÚ CON OPCIONES</h2>
+
+<ul>
+    <li><a th:href="@{/empresa/listado}">Todos los empleados</a></li>
+
+    <li><a th:href="@{/empresa/formulario-salario}">Salario de un empleado</a></li>
+
+    <li><a th:href="@{/empresa/formulario-busqueda}">Buscar empleado por campo</a></li>
+</ul>
+
+</body>
+</html>

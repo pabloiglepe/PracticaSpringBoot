@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header-tags}"></div>
+    <title>Salario por DNI</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="main-container">
+    <div class="container">
+        <div class="main-content">
+            <h1>Búsqueda del empleado para mostrar su salario</h1>
+
+            <form th:action="@{/app/nominas/calcular-salario}" method="POST">
+                <div>
+                    <label for="dniEmpleado">Indica el DNI del empleado:</label>
+                    <input type="text" id="dniEmpleado" name="dniEmpleado" required/>
+                </div>
+                <input type="submit" value="Buscar"/>
+            </form>
+
+            <div th:if="${salario != null and salario >= 0.0}">
+                El salario es de <span th:text="${#numbers.formatDecimal(salario, 0, 'POINT', 2, 'COMMA')}">100.000,00</span> euros
+            </div>
+
+            <div th:if="${errorBusqueda != null}">
+                <p class="error-message" th:text="${errorBusqueda}"></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

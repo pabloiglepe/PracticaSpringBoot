@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <div th:replace="~{fragments/header :: header-tags}"></div>
+    <title>Buscar y Modificar Empleados</title>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <h2>BUSCA EMPLEADOS POR CAMPO</h2>
+
+    <form th:action="@{/empresa/buscar}" method="POST">
+
+        <label for="dniBuscarEmpleado">DNI: </label>
+        <input type="text" id="dniBuscarEmpleado" name="dniBuscarEmpleado" placeholder="12345678A">
+
+        <label for="nombreBuscarEmpleado">Nombre: </label>
+        <input type="text" id="nombreBuscarEmpleado" name="nombreBuscarEmpleado" placeholder="Pablo">
+
+        <label for="categoriaBuscarEmpleado">Categoria: </label>
+        <input type="number" id="categoriaBuscarEmpleado" name="categoriaBuscarEmpleado" placeholder="1-9">
+
+        <label for="sexoBuscarEmpleado">Sexo: </label>
+        <input type="text" id="sexoBuscarEmpleado" name="sexoBuscarEmpleado" placeholder="M/F">
+
+        <label for="anyosBuscarEmpleado">Años: </label>
+        <input type="number" id="anyosBuscarEmpleado" name="anyosBuscarEmpleado" placeholder="50">
+
+        <button type="submit">Buscar Empleados</button>
+    </form>
+
+    <div th:if="${busquedaEmpleado != null and not #lists.isEmpty(busquedaEmpleado)}">
+        <table class="tabla">
+            <thead>
+            <tr>
+                <th>DNI</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Sexo</th>
+                <th>Años trabajados</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="empleado : ${busquedaEmpleado}">
+                <td th:text="${empleado.dni}"></td>
+                <td th:text="${empleado.nombre}"></td>
+                <td th:text="${empleado.categoria}"></td>
+                <td th:text="${empleado.sexo}"></td>
+                <td th:text="${empleado.anyos}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:if="${busquedaEmpleado != null and #lists.isEmpty(busquedaEmpleado)}">
+        <p>No se encontraron empleados que coincidan con los criterios de búsqueda.</p>
+    </div>
+
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
