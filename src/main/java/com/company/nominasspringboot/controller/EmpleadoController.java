@@ -2,11 +2,13 @@ package com.company.nominasspringboot.controller;
 
 import com.company.nominasspringboot.model.entity.Empleado;
 import com.company.nominasspringboot.service.EmpleadoService;
+import com.company.nominasspringboot.service.NominaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,10 +20,12 @@ import java.util.Optional;
 public class EmpleadoController {
 
     private final EmpleadoService empleadoService;
+    private final NominaService nominaService;
 
     @Autowired
-    public EmpleadoController(EmpleadoService empleadoService) {
+    public EmpleadoController(EmpleadoService empleadoService, NominaService nominaService) {
         this.empleadoService = empleadoService;
+        this.nominaService = nominaService;
     }
 
     @GetMapping("/")
@@ -45,14 +49,26 @@ public class EmpleadoController {
         return "mostrar-salario";
     }
 
-    @GetMapping("/salario")
-    public String procesarSalarioPorDni(Model model, @RequestParam("dni") String dni) {
+    @PostMapping("/salario")
+    public String procesarSalarioPorDni(Model model, @RequestParam("dniEmpleado") String dni) {
         try {
-            Optional<Empleado> salario = empleadoService.mostrarSalarioPorDni(dni);
-            model.addAttribute("salario", salario);
+            Optional<Empleado> empleadoOpt = empleadoService.mostrarSalarioPorDni(dni);
+
+            if (empleadoOpt.isEmpty()) {
+                model.addAttribute("errorBusqueda", "Error: Empleado con DNI " + dni + " no encontrado.");
+                return "mostrar-salario";
+            }
+
+            double sueldo = nominaService.calcularSueldo(empleadoOpt.get());
+            model.addAttribute("salario", sueldo);
             return "mostrar-salario";
+
         } catch (DataAccessException e) {
-            throw new RuntimeException("Error al recuperar la lista de todos los empleados", e);
+            model.addAttribute("errorBusqueda", "Error de acceso a datos.");
+            return "mostrar-salario";
+        } catch (IllegalArgumentException e) {
+            model.addAttribute("errorBusqueda", e.getMessage());
+            return "mostrar-salario";
         }
     }
 
@@ -61,16 +77,16 @@ public class EmpleadoController {
         return "buscar_empleado";
     }
 
-    @GetMapping("/buscar")
-    public String buscarPorCriterio(@RequestParam(name = "dni", required = false) String dni,
-                                    @RequestParam(name = "nombre", required = false) String nombre,
-                                    @RequestParam(name = "categoria", required = false) Integer categoria,
-                                    @RequestParam(name = "sexo", required = false) Character sexo,
-                                    @RequestParam(name = "anyos", required = false) Integer anyos,
+    @PostMapping("/buscar")
+    public String buscarPorCriterio(@RequestParam(name = "dniBuscarEmpleado", required = false) String dni,
+                                    @RequestParam(name = "nombreBuscarEmpleado", required = false) String nombre,
+                                    @RequestParam(name = "categoriaBuscarEmpleado", required = false) Integer categoria,
+                                    @RequestParam(name = "sexoBuscarEmpleado", required = false) Character sexo,
+                                    @RequestParam(name = "anyosBuscarEmpleado", required = false) Integer anyos,
                                     Model model) {
         try {
             List<Empleado> listaEmpleadosPorCriterio = empleadoService.buscarEmpleadosParaModificar(dni, nombre, categoria, sexo, anyos);
-            model.addAttribute("listaEmpleadosPorCriterio", listaEmpleadosPorCriterio);
+            model.addAttribute("busquedaEmpleado", listaEmpleadosPorCriterio);
             return "buscar_empleado";
         } catch (DataAccessException e) {
             throw new RuntimeException("Error al buscar segun el criterio", e);

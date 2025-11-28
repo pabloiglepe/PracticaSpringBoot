@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, String> {
 
-    @Query(value = "SELECT sueldo FROM nomina WHERE Dni = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM empleado WHERE Dni = ?1", nativeQuery = true)
     Optional<Empleado> findSalarioByID(String DNi);
 
 

@@ -12,7 +12,7 @@
         <div class="main-content">
             <h1>Búsqueda del empleado para mostrar su salario</h1>
 
-            <form th:action="@{/app/nominas/calcular-salario}" method="POST">
+            <form th:action="@{/empresa/salario}" method="POST">
                 <div>
                     <label for="dniEmpleado">Indica el DNI del empleado:</label>
                     <input type="text" id="dniEmpleado" name="dniEmpleado" required/>
@@ -20,12 +20,14 @@
                 <input type="submit" value="Buscar"/>
             </form>
 
-            <div th:if="${salario != null and salario >= 0.0}">
-                El salario es de <span th:text="${#numbers.formatDecimal(salario, 0, 'POINT', 2, 'COMMA')}">100.000,00</span> euros
+            <div th:if="${errorBusqueda != null}">
+                <p class="error-message" style="color: red;" th:text="${errorBusqueda}">
+                    [Mensaje de error del controlador]
+                </p>
             </div>
 
-            <div th:if="${errorBusqueda != null}">
-                <p class="error-message" th:text="${errorBusqueda}"></p>
+            <div th:if="${salario != null}">
+                El salario es de <span th:text="${#numbers.formatDecimal(salario, 0, 'POINT', 2, 'COMMA')}">100.000,00</span> euros
             </div>
 
         </div>
